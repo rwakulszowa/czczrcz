@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct czczrcz
 {
@@ -11,10 +12,25 @@ typedef struct czczrcz
 czczrcz
 createCzczrcz(const unsigned int input,
               const unsigned char bits,
-              bool(*fn)(const unsigned char));
+              bool(*fn)(const unsigned int));
 
 void
 printCzczrcz(czczrcz* in);
+
+typedef struct czArray
+{
+    unsigned long int len;
+    bool(*fn)(const unsigned int);
+    czczrcz* cz;
+} czArray;
+
+int
+createCzArray(czArray* res,
+              const unsigned int* inputs,
+              const unsigned long inputsLen,
+              const unsigned char inputBits,
+              bool(*fn)(const unsigned int));
+
 
 void
 avgConvergence(const czczrcz* data,
@@ -27,7 +43,7 @@ printConvergence(const float* conv,
                  const unsigned char bits);
 
 bool
-fnXor(unsigned char input);
+fnXor(unsigned int input);
 
 bool
-fnOr(unsigned char input);
+fnOr(unsigned int input);

@@ -5,17 +5,21 @@ int main() {
   const int range = 4;
   const int input_count = 1 << range;
 
-  int i;
+  unsigned int i;
+  czArray czdata;
+  unsigned int inputs[input_count];
 
-  // Array of binary inputs, outputs and stuff
-  czczrcz data[input_count];
-
+  // Prepare inputs
   for (i = 0; i < input_count; ++i) {
-    data[i] = createCzczrcz(i, range, fnOr);
+    inputs[i] = i;
   }
 
+  if (
+    createCzArray(&czdata, inputs, input_count, range, fnOr) < 0
+     ) { return -1; }
+
   float avc[range];
-  avgConvergence(data, input_count, range, avc);
+  avgConvergence(czdata.cz, input_count, range, avc);
   printConvergence(avc, range);
 
   return 0;

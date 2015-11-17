@@ -37,7 +37,7 @@ avgConvergence(const czczrcz* data,
 czczrcz
 createCzczrcz(const unsigned int input,
               const unsigned char bits,
-              bool(*fn)(const unsigned char))
+              bool(*fn)(const unsigned int))
 {
   bool res = fn(input);
   unsigned char conv = res ? input : ~input;
@@ -57,6 +57,33 @@ printCzczrcz(czczrcz* in)
          in->bits, in->input, in->output, in->convergence);
 }
 
+int
+createCzArray(czArray* res,
+              const unsigned int* inputs,
+              const unsigned long inputsLen,
+              const unsigned char inputBits,
+              bool(*fn)(const unsigned int))
+{
+  int i;
+  czczrcz* arr;
+  arr = malloc(inputsLen * sizeof(czczrcz));
+
+  if (!arr) {
+    return -1;
+  }
+
+  for (i = 0; i < inputsLen; ++i) {
+    arr[i] = createCzczrcz(inputs[i], inputsLen, fn);
+  }
+
+  res->len = inputsLen;
+  res->fn = fn;
+  res->cz = arr;
+
+  return 0;
+}
+
+
 void
 printConvergence(const float* conv,
                  const unsigned char bits)
@@ -69,19 +96,19 @@ printConvergence(const float* conv,
 }
 
 bool
-fnXor(const unsigned char input)
+fnXor(const unsigned int input)
 {
-  unsigned char a = (input & 2) >> 1;
-  unsigned char b = input & 1;
+  unsigned int a = (input & 2) >> 1;
+  unsigned int b = input & 1;
 
   return a ^ b;
 }
 
 bool
-fnOr(unsigned char input)
+fnOr(unsigned int input)
 {
-  unsigned char a = (input & 2) >> 1;
-  unsigned char b = input & 1;
+  unsigned int a = (input & 2) >> 1;
+  unsigned int b = input & 1;
 
   return a | b;
 }
