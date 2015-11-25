@@ -10,4 +10,4 @@ main: main.c czczrcz.o
 	$(CXX) main.c czczrcz.o -o main
 
 clean:
-	rm main
+	rm main *.o
