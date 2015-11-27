@@ -1,3 +1,5 @@
+from __future__ import division
+from node import Node
 """
 Simple working example of what is to be a useful structure for
 unsupervised machine learning project
@@ -72,7 +74,36 @@ class Figure:
         )
 
     def show(self):
-        print [(key, val) for key, val in vars(self).iteritems() if val is True]
+        print ([key for key, val in vars(self).iteritems() if val is True])
 
-f = Figure.factory(Figure.Rectangle)
-f.show()
+def countIf(list, condition):
+    """ Count elements in list satisfying the condition """
+    return sum(1 if condition(x) else 0 for x in list)
+
+def percentage(list, condition):
+    return countIf(list, condition) / len(list)
+
+def separate(list, condition):
+    hits, misses = [], []
+
+    for el in list:
+        if condition(el):
+            hits.append(el)
+        else:
+            misses.append(el)
+
+    return hits, misses
+
+# Prepare some figures
+figures = [
+    Figure.factory(shape)
+    for shape in ["Circle", "Square", "Quad", "Trapezoid"]
+    for i in range(0, 25)
+]
+
+root = Node("root", figures, None)
+
+circles, notCircles = separate(figures, lambda x: getattr(x, 'isCircle'))
+root.addChild(Node("circles", circles, None))
+root.addChild(Node("notCircles", notCircles, None))
+print (root)
