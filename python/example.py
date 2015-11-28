@@ -2,13 +2,16 @@ from __future__ import division
 from node import Node
 """
 Simple working example of what is to be a useful structure for
-unsupervised machine learning project
+unsupervised machine learning project.
+
+Currently it only supports one category - shape - and its subcategories.
+
 """
 
-class Figure:
-    """ Class holding simple parameters for each figure """
+class Shape:
+    """ Class holding simple parameters of each shape """
 
-    """ Static enum-like fields specifying available figure types"""
+    """ Static enum-like fields specifying available shapes """
     Circle = "Circle"
     Quad = "Quad"
     Trapezoid = "Trapezoid"
@@ -40,36 +43,36 @@ class Figure:
 
     @staticmethod
     def factory(type):
-        """ Factory creating specific types of figures
+        """ Factory creating specific shapes
 
         It is not really a factory from an OOP point of view, but again,
         this is just an example, as simple as possible.
         """
-        if type is Figure.Circle: return Figure(
+        if type is Shape.Circle: return Shape(
             True, False, False, False, False, False, False
         )
 
-        if type is Figure.Quad: return Figure(
+        if type is Shape.Quad: return Shape(
             False, True, False, False, False, False, False
         )
 
-        if type is Figure.Trapezoid: return Figure(
+        if type is Shape.Trapezoid: return Shape(
             False, True, True, False, False, False, False
         )
 
-        if type is Figure.Parallelogram: return Figure(
+        if type is Shape.Parallelogram: return Shape(
             False, True, True, True, False, False, False
         )
 
-        if type is Figure.Rhombus: return Figure(
+        if type is Shape.Rhombus: return Shape(
             False, True, True, False, True, False, False
         )
 
-        if type is Figure.Rectangle: return Figure(
+        if type is Shape.Rectangle: return Shape(
             False, True, True, True, False, True, False
         )
 
-        if type is Figure.Square: return Figure(
+        if type is Shape.Square: return Shape(
             False, True, True, True, True, True, True
         )
 
@@ -94,16 +97,19 @@ def separate(list, condition):
 
     return hits, misses
 
-# Prepare some figures
-figures = [
-    Figure.factory(shape)
+# Prepare some shapes
+shapes = [
+    Shape.factory(shape)
     for shape in ["Circle", "Square", "Quad", "Trapezoid"]
     for i in range(0, 25)
 ]
 
-root = Node("root", figures, None)
+isCircle = Node("isCircle", shapes, None)
 
-circles, notCircles = separate(figures, lambda x: getattr(x, 'isCircle'))
-root.addChild(Node("circles", circles, None))
-root.addChild(Node("notCircles", notCircles, None))
-print (root)
+# Separate by 'isCircle' parameter
+circlesEls, notCirclesEls = separate(shapes, lambda x: getattr(x, 'isCircle'))
+circles = isCircle.addChild(Node("circles", circlesEls, None))
+notCircles = isCircle.addChild(Node("notCircles", notCirclesEls, None))
+
+# Separate by
+print (isCircle)

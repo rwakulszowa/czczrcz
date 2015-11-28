@@ -1,15 +1,15 @@
 import json
 
 class Node:
-    def __init__(self, name, values, children):
+    def __init__(self, name, elements, children):
         self.name = name
-        self.values = values
+        self.elements = elements
         self.children = children if children else []
 
     def __str__(self):
         return json.dumps(self, default = lambda o: (
             o.name,
-            len(o.values),
+            len(o.elements),
             o.children
         ), indent=4)
 
