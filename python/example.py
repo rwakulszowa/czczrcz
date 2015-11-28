@@ -104,12 +104,37 @@ shapes = [
     for i in range(0, 25)
 ]
 
-isCircle = Node("isCircle", shapes, None)
-
 # Separate by 'isCircle' parameter
-circlesEls, notCirclesEls = separate(shapes, lambda x: getattr(x, 'isCircle'))
-circles = isCircle.addChild(Node("circles", circlesEls, None))
-notCircles = isCircle.addChild(Node("notCircles", notCirclesEls, None))
+isCircle = Node("isCircle", shapes, None)
+circleEls, notCircleEls = separate(shapes, lambda x: getattr(x, 'isCircle'))
+circles = isCircle.addChild(Node("circles", circleEls, None))
+notCircles = isCircle.addChild(Node("notCircles", notCircleEls, None))
 
-# Separate by
+print ("\nCircles:")
+print (isCircle)
+
+# Separate by 'isTrapezoid' parameter
+isTrapezoid = Node("isTrapezoid", shapes, None)
+trapezoidEls, notTrapezoidEls = separate(shapes, lambda x : getattr(x, 'isTrapezoid'))
+isTrapezoid.addChild(Node("trapezoids", trapezoidEls, None))
+isTrapezoid.addChild(Node("notTrapezoids", notTrapezoidEls, None))
+
+print ("\nTrapezoids:")
+print (isTrapezoid)
+
+# Try to find a relation between 'isTrapezoid' and 'isCircle'
+convTrapezoidCircle = percentage(trapezoidEls, lambda x: getattr(x, 'isCircle'))  # equals 0 -> no trapezoidEls are circles, therefore all trapezoidEls are notCircles
+convTrapezoidNotCircle = percentage(trapezoidEls, lambda x: not getattr(x, 'isCircle'))  # check -> equals 1
+print "Convergence:", convTrapezoidCircle, convTrapezoidNotCircle
+
+# Since 'isTrapezoid' is a subset of 'isNotCircle', we can merge both trees
+trapezoidNotCircleEls, notTrapezoidNotCircleEls = separate(
+    notCircleEls,
+    lambda x: getattr(x, 'isTrapezoid')
+)
+
+notCircles.children[1].addChild(Node("trapezoidsNCircles", trapezoidNotCircleEls, None))
+notCircles.children[1].addChild(Node("nTrapezoidsNCircles", notTrapezoidNotCircleEls, None))
+
+print ("\nMerged tree of circles and trapezoids:")
 print (isCircle)
