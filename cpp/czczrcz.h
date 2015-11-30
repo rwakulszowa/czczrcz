@@ -41,9 +41,3 @@ avgConvergence(const czczrcz* data,
 void
 printConvergence(const float* conv,
                  const unsigned char bits);
-
-bool
-fnXor(unsigned int input);
-
-bool
-fnOr(unsigned int input);

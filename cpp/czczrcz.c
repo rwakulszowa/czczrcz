@@ -94,21 +94,3 @@ printConvergence(const float* conv,
       printf("Bit %d: %f\n", i, conv[i]);
   }
 }
-
-bool
-fnXor(const unsigned int input)
-{
-  unsigned int a = (input & 2) >> 1;
-  unsigned int b = input & 1;
-
-  return a ^ b;
-}
-
-bool
-fnOr(unsigned int input)
-{
-  unsigned int a = (input & 2) >> 1;
-  unsigned int b = input & 1;
-
-  return a | b;
-}
