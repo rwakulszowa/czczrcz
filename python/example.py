@@ -104,20 +104,39 @@ shapes = [
     for i in range(0, 25)
 ]
 
+# Prepate some functions to split shapes by
+# Not lambdas to avoid code duplication
+# TODO: encapsulate splitting the tree and save the condition => would allow using lambdas
+
+def alwaysTrueF(el):
+    return True
+
+def isCircleF(el):
+    return getattr(el, 'isCircle')
+
+def isNotCircleF(el):
+    return not getattr(el, 'isCircle')
+
+def isTrapezoidF(el):
+    return getattr(el, 'isTrapezoid')
+
+def isNotTrapezoidF(el):
+    return not getattr(el, 'isTrapezoid')
+
 # Separate by 'isCircle' parameter
-isCircle = Node("isCircle", shapes, None)
-circleEls, notCircleEls = separate(shapes, lambda x: getattr(x, 'isCircle'))
-circles = isCircle.addChild(Node("circles", circleEls, None))
-notCircles = isCircle.addChild(Node("notCircles", notCircleEls, None))
+isCircle = Node("isCircle", alwaysTrueF, shapes, None)
+circleEls, notCircleEls = separate(shapes, isCircleF)
+circles = isCircle.addChild(Node("circles", isCircleF, circleEls, None))
+notCircles = isCircle.addChild(Node("notCircles", isNotCircleF, notCircleEls, None))
 
 print ("\nCircles:")
 print (isCircle)
 
 # Separate by 'isTrapezoid' parameter
-isTrapezoid = Node("isTrapezoid", shapes, None)
-trapezoidEls, notTrapezoidEls = separate(shapes, lambda x : getattr(x, 'isTrapezoid'))
-isTrapezoid.addChild(Node("trapezoids", trapezoidEls, None))
-isTrapezoid.addChild(Node("notTrapezoids", notTrapezoidEls, None))
+isTrapezoid = Node("isTrapezoid", alwaysTrueF, shapes, None)
+trapezoidEls, notTrapezoidEls = separate(shapes, isTrapezoidF)
+isTrapezoid.addChild(Node("trapezoids", isTrapezoidF, trapezoidEls, None))
+isTrapezoid.addChild(Node("notTrapezoids", isNotTrapezoidF, notTrapezoidEls, None))
 
 print ("\nTrapezoids:")
 print (isTrapezoid)
@@ -133,8 +152,8 @@ trapezoidNotCircleEls, notTrapezoidNotCircleEls = separate(
     lambda x: getattr(x, 'isTrapezoid')
 )
 
-notCircles.children[1].addChild(Node("trapezoidsNCircles", trapezoidNotCircleEls, None))
-notCircles.children[1].addChild(Node("nTrapezoidsNCircles", notTrapezoidNotCircleEls, None))
+notCircles.children[1].addChild(Node("trapezoidsNCircles", isTrapezoidF, trapezoidNotCircleEls, None))
+notCircles.children[1].addChild(Node("nTrapezoidsNCircles", isNotTrapezoidF, notTrapezoidNotCircleEls, None))
 
 print ("\nMerged tree of circles and trapezoids:")
 print (isCircle)
