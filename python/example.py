@@ -1,4 +1,5 @@
 from __future__ import division
+import pdb
 from node import Node
 """
 Simple working example of what is to be a useful structure for
@@ -97,6 +98,32 @@ def separate(list, condition):
 
     return hits, misses
 
+def createSeparatedTree(elems, condition):
+    #TODO: wrap the encapsulation logic into this function
+    pass
+
+def mergeTrees(t1, t2):
+    """
+    Find a relation between two trees,  merge them into one.
+
+    Note: in this example I assume there really is a relation between them.
+    TODO: handle non-related trees (return an array of trees in such case)
+    TODO: store computed statistics in each node
+    TODO: add some helpers, recur into children
+    """
+    t1InT2 = [percentage(t2.elements, t1Child.condition)
+              for t1Child in t1.children]
+              #TODO: change t2.elements to t2.children.elements or sth like that
+
+    t2InT1 = [percentage(t1.elements, t2Child.condition)
+              for t2Child in t2.children]
+
+    print ("Percentage of {} in {}:".format(t1.name, t2.name),
+           t1InT2)
+    print ("Percentage of {} in {}:".format(t2.name, t1.name),
+           t2InT1)
+    #TODO: implement the rest of it
+
 # Prepare some shapes
 shapes = [
     Shape.factory(shape)
@@ -104,10 +131,8 @@ shapes = [
     for i in range(0, 25)
 ]
 
-# Prepate some functions to split shapes by
-# Not lambdas to avoid code duplication
-# TODO: encapsulate splitting the tree and save the condition => would allow using lambdas
-
+# Prepate some functions to split shapes by.
+# Not lambdas to avoid code duplication.
 def alwaysTrueF(el):
     return True
 
@@ -144,12 +169,13 @@ print (isTrapezoid)
 # Try to find a relation between 'isTrapezoid' and 'isCircle'
 convTrapezoidCircle = percentage(trapezoidEls, lambda x: getattr(x, 'isCircle'))  # equals 0 -> no trapezoidEls are circles, therefore all trapezoidEls are notCircles
 convTrapezoidNotCircle = percentage(trapezoidEls, lambda x: not getattr(x, 'isCircle'))  # check -> equals 1
-print "Convergence:", convTrapezoidCircle, convTrapezoidNotCircle
+print ("Convergence:", convTrapezoidCircle, convTrapezoidNotCircle)
 
+mergeTrees(isCircle, isTrapezoid)
 # Since 'isTrapezoid' is a subset of 'isNotCircle', we can merge both trees
 trapezoidNotCircleEls, notTrapezoidNotCircleEls = separate(
     notCircleEls,
-    lambda x: getattr(x, 'isTrapezoid')
+    isTrapezoidF
 )
 
 notCircles.children[1].addChild(Node("trapezoidsNCircles", isTrapezoidF, trapezoidNotCircleEls, None))
