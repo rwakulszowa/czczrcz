@@ -19,6 +19,9 @@ class Node:
             o.children
         ), indent=4)
 
+    def __repr__(self):
+        return str(self)
+
     def addChild(self, child):
         self.children.append(child)
         return self

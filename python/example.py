@@ -143,46 +143,37 @@ shapes = [
     for i in range(0, 25)
 ]
 
-# Prepate some functions to split shapes by.
-# Not lambdas to avoid code duplication.
-def alwaysTrueF(el):
-    return True
+# Create independent node for each parameter
+nodes = [
+    newSeparatedNode(name, shapes, condition)
+    for name, condition in [
+        ('circles', lambda x: getattr(x, 'isCircle')),
+        ('quads', lambda x: getattr(x, 'isQuad')),
+        ('trapezoids', lambda x: getattr(x, 'isTrapezoid')),
+        ('parallelograms', lambda x: getattr(x, 'isParalllelogram')),
+        ('rhombuses', lambda x: getattr(x, 'isRhombus')),
+        ('rectangles', lambda x: getattr(x, 'isRectangle')),
+        ('squares', lambda x: getattr(x, 'isSquare'))
+    ]
+]
 
-def isCircleF(el):
-    return getattr(el, 'isCircle')
+circles = nodes[0]
+trapezoids = nodes[2]
 
-def isNotCircleF(el):
-    return not getattr(el, 'isCircle')
+# Print some nodes
+print ((circles, trapezoids))
 
-def isTrapezoidF(el):
-    return getattr(el, 'isTrapezoid')
-
-def isNotTrapezoidF(el):
-    return not getattr(el, 'isTrapezoid')
-
-# Separate by 'isCircle' parameter
-isCircle = newSeparatedNode('isCircle', shapes, isCircleF)
-
-print ("\nCircles:")
-print (isCircle)
-
-# Separate by 'isTrapezoid' parameter
-isTrapezoid = newSeparatedNode('isTrapezoid', shapes, isTrapezoidF)
-
-print ("\nTrapezoids:")
-print (isTrapezoid)
-
-# Try to find a relation between 'isTrapezoid' and 'isCircle'
-circlesInTrapezoids = computeRelationshipBetweenTrees(isCircle, isTrapezoid)
+# Try to find a relation between 'trapezoids' and 'circles'
+circlesInTrapezoids = computeRelationshipBetweenTrees(circles, trapezoids)
 print [("{} in {}: {}".format(t[0].name, t[1].name, t[2]))
        for t in circlesInTrapezoids]
 
-# Create a new node from notCircles, separate by isTrapezoid.condition
-isTrapezoidNotCircle = newSeparatedNode(
-    'isTrapezoidNotCircle',
-    isCircle.children[1].elements,
-    isTrapezoid.condition
+# Create a new node from notCircles, separate by trapezoids.condition
+trapezoidsNotCircle = newSeparatedNode(
+    'trapezoidsNotCircle',
+    circles.children[1].elements,
+    trapezoids.condition
 )
 
 print ("\nTrapezoids not circles:")
-print (isTrapezoidNotCircle)
+print (trapezoidsNotCircle)
