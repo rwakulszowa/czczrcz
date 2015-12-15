@@ -98,9 +98,14 @@ def separate(list, condition):
 
     return hits, misses
 
-def createSeparatedTree(elems, condition):
-    #TODO: wrap the encapsulation logic into this function
-    pass
+def newSeparatedNode(name, elems, condition):
+    positive, negative = separate(elems, condition)
+
+    root = Node(name, condition, elems, None)
+    posNode = root.addChild(Node(name + "_pos", condition, positive, None))
+    negNode = root.addChild(Node(name + "_neg", lambda x: not condition(x), negative, None))
+
+    return root
 
 def computeRelationshipBetweenTrees(t1, t2):
     t1InT2 = [(
@@ -111,8 +116,6 @@ def computeRelationshipBetweenTrees(t1, t2):
               for t1Child in t1.children
               for t2Child in t2.children
              ]
-
-    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t1InT2]
 
     return t1InT2
 
@@ -127,6 +130,10 @@ def mergeTrees(t1, t2):
     """
     t1InT2 = computeRelationshipBetweenTrees(t1, t2)
     t2InT1 = computeRelationshipBetweenTrees(t2, t1)
+
+    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t1InT2]
+    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t2InT1]
+
     #TODO: implement the rest of it
 
 # Prepare some shapes
@@ -154,38 +161,28 @@ def isNotTrapezoidF(el):
     return not getattr(el, 'isTrapezoid')
 
 # Separate by 'isCircle' parameter
-isCircle = Node("isCircle", alwaysTrueF, shapes, None)
-circleEls, notCircleEls = separate(shapes, isCircleF)
-circles = isCircle.addChild(Node("circles", isCircleF, circleEls, None))
-notCircles = isCircle.addChild(Node("notCircles", isNotCircleF, notCircleEls, None))
+isCircle = newSeparatedNode('isCircle', shapes, isCircleF)
 
 print ("\nCircles:")
 print (isCircle)
 
 # Separate by 'isTrapezoid' parameter
-isTrapezoid = Node("isTrapezoid", alwaysTrueF, shapes, None)
-trapezoidEls, notTrapezoidEls = separate(shapes, isTrapezoidF)
-isTrapezoid.addChild(Node("trapezoids", isTrapezoidF, trapezoidEls, None))
-isTrapezoid.addChild(Node("notTrapezoids", isNotTrapezoidF, notTrapezoidEls, None))
+isTrapezoid = newSeparatedNode('isTrapezoid', shapes, isTrapezoidF)
 
 print ("\nTrapezoids:")
 print (isTrapezoid)
 
 # Try to find a relation between 'isTrapezoid' and 'isCircle'
-convTrapezoidCircle = percentage(trapezoidEls, lambda x: getattr(x, 'isCircle'))  # equals 0 -> no trapezoidEls are circles, therefore all trapezoidEls are notCircles
-convTrapezoidNotCircle = percentage(trapezoidEls, lambda x: not getattr(x, 'isCircle'))  # check -> equals 1
-print ("Convergence:", convTrapezoidCircle, convTrapezoidNotCircle)
+circlesInTrapezoids = computeRelationshipBetweenTrees(isCircle, isTrapezoid)
+print [("{} in {}: {}".format(t[0].name, t[1].name, t[2]))
+       for t in circlesInTrapezoids]
 
-mergeTrees(isCircle, isTrapezoid)  # to be continued
-
-# Since 'isTrapezoid' is a subset of 'isNotCircle', we can merge both trees
-trapezoidNotCircleEls, notTrapezoidNotCircleEls = separate(
-    notCircleEls,
-    isTrapezoidF
+# Create a new node from notCircles, separate by isTrapezoid.condition
+isTrapezoidNotCircle = newSeparatedNode(
+    'isTrapezoidNotCircle',
+    isCircle.children[1].elements,
+    isTrapezoid.condition
 )
 
-notCircles.children[1].addChild(Node("trapezoidsNCircles", isTrapezoidF, trapezoidNotCircleEls, None))
-notCircles.children[1].addChild(Node("nTrapezoidsNCircles", isNotTrapezoidF, notTrapezoidNotCircleEls, None))
-
-print ("\nMerged tree of circles and trapezoids:")
-print (isCircle)
+print ("\nTrapezoids not circles:")
+print (isTrapezoidNotCircle)
