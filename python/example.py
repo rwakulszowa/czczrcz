@@ -102,6 +102,20 @@ def createSeparatedTree(elems, condition):
     #TODO: wrap the encapsulation logic into this function
     pass
 
+def computeRelationshipBetweenTrees(t1, t2):
+    t1InT2 = [(
+                  t1Child,
+                  t2Child,
+                  percentage(t2Child.elements, t1Child.condition)
+              )
+              for t1Child in t1.children
+              for t2Child in t2.children
+             ]
+
+    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t1InT2]
+
+    return t1InT2
+
 def mergeTrees(t1, t2):
     """
     Find a relation between two trees,  merge them into one.
@@ -111,17 +125,8 @@ def mergeTrees(t1, t2):
     TODO: store computed statistics in each node
     TODO: add some helpers, recur into children
     """
-    t1InT2 = [percentage(t2.elements, t1Child.condition)
-              for t1Child in t1.children]
-              #TODO: change t2.elements to t2.children.elements or sth like that
-
-    t2InT1 = [percentage(t1.elements, t2Child.condition)
-              for t2Child in t2.children]
-
-    print ("Percentage of {} in {}:".format(t1.name, t2.name),
-           t1InT2)
-    print ("Percentage of {} in {}:".format(t2.name, t1.name),
-           t2InT1)
+    t1InT2 = computeRelationshipBetweenTrees(t1, t2)
+    t2InT1 = computeRelationshipBetweenTrees(t2, t1)
     #TODO: implement the rest of it
 
 # Prepare some shapes
@@ -171,7 +176,8 @@ convTrapezoidCircle = percentage(trapezoidEls, lambda x: getattr(x, 'isCircle'))
 convTrapezoidNotCircle = percentage(trapezoidEls, lambda x: not getattr(x, 'isCircle'))  # check -> equals 1
 print ("Convergence:", convTrapezoidCircle, convTrapezoidNotCircle)
 
-mergeTrees(isCircle, isTrapezoid)
+mergeTrees(isCircle, isTrapezoid)  # to be continued
+
 # Since 'isTrapezoid' is a subset of 'isNotCircle', we can merge both trees
 trapezoidNotCircleEls, notTrapezoidNotCircleEls = separate(
     notCircleEls,
