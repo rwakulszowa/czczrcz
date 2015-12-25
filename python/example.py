@@ -119,22 +119,19 @@ def computeRelationshipBetweenTrees(t1, t2):
 
     return t1InT2
 
-def mergeTrees(t1, t2):
+def relation(origin, relative):
     """
-    Find a relation between two trees,  merge them into one.
-
-    Note: in this example I assume there really is a relation between them.
-    TODO: handle non-related trees (return an array of trees in such case)
-    TODO: store computed statistics in each node
-    TODO: add some helpers, recur into children
+    Compute a probability that element in each origin.children fulfills
+    condition given by relative.children
     """
-    t1InT2 = computeRelationshipBetweenTrees(t1, t2)
-    t2InT1 = computeRelationshipBetweenTrees(t2, t1)
+    ans = [(
+                relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
+                percentage(origin_child.elements, relative_child.condition)
+           )
+            for origin_child in origin.children
+            for relative_child in relative.children]
 
-    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t1InT2]
-    print [("{} in {}: {}".format(t[0].name, t[1].name, t[2])) for t in t2InT1]
-
-    #TODO: implement the rest of it
+    return ans
 
 # Prepare some shapes
 shapes = [
@@ -177,3 +174,10 @@ trapezoidsNotCircle = newSeparatedNode(
 
 print ("\nTrapezoids not circles:")
 print (trapezoidsNotCircle)
+
+percentageTrapezoidsInCircles = relation(circles, trapezoids)
+percentageCirclesInTrapezoids = relation(trapezoids, circles)
+
+print ("\nRelations:")
+print ("Trapezoids in circles: {}".format(percentageTrapezoidsInCircles))
+print ("Circles in trapezoids: {}".format(percentageCirclesInTrapezoids))
