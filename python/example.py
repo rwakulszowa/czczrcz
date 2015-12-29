@@ -107,18 +107,6 @@ def newSeparatedNode(name, elems, condition):
 
     return root
 
-def computeRelationshipBetweenTrees(t1, t2):
-    t1InT2 = [(
-                  t1Child,
-                  t2Child,
-                  percentage(t2Child.elements, t1Child.condition)
-              )
-              for t1Child in t1.children
-              for t2Child in t2.children
-             ]
-
-    return t1InT2
-
 def relation(origin, relative):
     """
     Compute a probability that element in each origin.children fulfills
@@ -159,21 +147,6 @@ trapezoids = nodes[2]
 
 # Print some nodes
 print ((circles, trapezoids))
-
-# Try to find a relation between 'trapezoids' and 'circles'
-circlesInTrapezoids = computeRelationshipBetweenTrees(circles, trapezoids)
-print [("{} in {}: {}".format(t[0].name, t[1].name, t[2]))
-       for t in circlesInTrapezoids]
-
-# Create a new node from notCircles, separate by trapezoids.condition
-trapezoidsNotCircle = newSeparatedNode(
-    'trapezoidsNotCircle',
-    circles.children[1].elements,
-    trapezoids.condition
-)
-
-print ("\nTrapezoids not circles:")
-print (trapezoidsNotCircle)
 
 percentageTrapezoidsInCircles = relation(circles, trapezoids)
 percentageCirclesInTrapezoids = relation(trapezoids, circles)
