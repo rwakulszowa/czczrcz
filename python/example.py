@@ -42,7 +42,7 @@ class Shape:
         self.isRectangle = rectangle
         self.isSquare = square
 
-    @staticmethod
+    @staticmethod  # TODO: try using classmethod instead
     def factory(type):
         """ Factory creating specific shapes
 
@@ -90,7 +90,7 @@ shapes = [
 
 # Create independent node for each parameter
 nodes = [
-    newSeparatedNode(name, shapes, condition)
+    Node(name, condition, shapes)
     for name, condition in [
         ('circles', lambda x: getattr(x, 'isCircle')),
         ('quads', lambda x: getattr(x, 'isQuad')),
