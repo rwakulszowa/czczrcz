@@ -1,6 +1,6 @@
 from __future__ import division
 import pdb
-from node import Node
+from node import *
 """
 Simple working example of what is to be a useful structure for
 unsupervised machine learning project.
@@ -80,46 +80,6 @@ class Shape:
     def show(self):
         print ([key for key, val in vars(self).iteritems() if val is True])
 
-def countIf(list, condition):
-    """ Count elements in list satisfying the condition """
-    return sum(1 if condition(x) else 0 for x in list)
-
-def percentage(list, condition):
-    return countIf(list, condition) / len(list)
-
-def separate(list, condition):
-    hits, misses = [], []
-
-    for el in list:
-        if condition(el):
-            hits.append(el)
-        else:
-            misses.append(el)
-
-    return hits, misses
-
-def newSeparatedNode(name, elems, condition):
-    positive, negative = separate(elems, condition)
-
-    root = Node(name, condition, elems, None)
-    posNode = root.addChild(Node(name + "_pos", condition, positive, None))
-    negNode = root.addChild(Node(name + "_neg", lambda x: not condition(x), negative, None))
-
-    return root
-
-def relation(origin, relative):
-    """
-    Compute a probability that element in each origin.children fulfills
-    condition given by relative.children
-    """
-    ans = [(
-                relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
-                percentage(origin_child.elements, relative_child.condition)
-           )
-            for origin_child in origin.children
-            for relative_child in relative.children]
-
-    return ans
 
 # Prepare some shapes
 shapes = [
@@ -148,8 +108,8 @@ trapezoids = nodes[2]
 # Print some nodes
 print ((circles, trapezoids))
 
-percentageTrapezoidsInCircles = relation(circles, trapezoids)
-percentageCirclesInTrapezoids = relation(trapezoids, circles)
+percentageTrapezoidsInCircles = circles.relation(trapezoids)
+percentageCirclesInTrapezoids = trapezoids.relation(circles)
 
 print ("\nRelations:")
 print ("Trapezoids in circles: {}".format(percentageTrapezoidsInCircles))
