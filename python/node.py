@@ -15,10 +15,6 @@ class Node:
     def __repr__(self):
         return str(self)
 
-    def addChild(self, child):
-        self.categories.append(child)
-        return self
-
     def add_relative(self, relative):
         self.relatives.append(relative)
         return self
@@ -51,6 +47,12 @@ class NodeCategory(object):
         self.value = value
         self.condition = lambda x: condition(x) == value
         self.elements = elements
+
+    def __str__(self):
+        return json.dumps(self, cls=NodeEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
 
 class NodeEncoder(json.JSONEncoder):
     def default(self, obj):
