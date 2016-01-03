@@ -10,13 +10,7 @@ class Node:
         self.relatives = []  # tuples of node, percentage of self.elements fulfilling relative.condition
 
     def __str__(self):
-        return json.dumps(self, default = lambda o: (
-            o.name,
-            # TODO: save conditions in a file, use inspect here
-            len(o.elements),
-            o.children,
-            o.relatives
-        ) if isinstance(o, Node) else str(o), indent=4)
+        return json.dumps(self, cls=NodeEncoder, indent=4)
 
     def __repr__(self):
         return str(self)
@@ -58,8 +52,23 @@ class NodeCategory(object):
         self.condition = lambda x: condition(x) == value
         self.elements = elements
 
-    def __str__(self):
-        return str(self.__dict__)
+class NodeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, NodeCategory):
+            return {
+                'name': obj.name,
+                'value': obj.value,
+                'elements': len(obj.elements)
+            }
+
+        if isinstance(obj, Node):
+            return {
+                'name': obj.name,
+                'elements': len(obj.elements),
+                'children': obj.children
+            }
+
+        return json.JSONEncoder.default(self, obj)
 
 def countIf(list, condition):
     """ Count elements in list satisfying the condition """
