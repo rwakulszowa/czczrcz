@@ -1,7 +1,6 @@
 from __future__ import division
 import json
 
-#TODO: find a way to merge nodes into a tree after computing all probabilities
 class Node:
     def __init__(self, name, condition, elements):
         self.name = name
@@ -36,8 +35,8 @@ class Node:
         condition given by relative.children
         """
         ans = [(
-                    relative_child['name'],  # TODO: .name only for convenience, should be an object (TODO: make a new class)
-                    percentage(origin_child['elements'], relative_child['condition'])
+                    relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
+                    percentage(origin_child.elements, relative_child.condition)
                )
                 for origin_child in self.children
                 for relative_child in relative.children]
@@ -47,18 +46,20 @@ class Node:
     def separate_node(self):
         hits, misses = separate(self.elements, self.condition)
 
-        positive = self.category(self.name + "_pos", True, hits)
-        negative = self.category(self.name + "_neg", False, misses)
+        positive = NodeCategory(self.name + "_pos", True, self.condition, hits)
+        negative = NodeCategory(self.name + "_neg", False, self.condition, misses)
 
         return (positive, negative)
 
-    def category(self, name, value, elements):
-        return {
-            'name': name,
-            'value': value,
-            'elements': elements,
-            'condition': lambda x: self.condition(x) == value
-        }
+class NodeCategory(object):
+    def __init__(self, name, value, condition, elements):
+        self.name = name
+        self.value = value
+        self.condition = lambda x: condition(x) == value
+        self.elements = elements
+
+    def __str__(self):
+        return str(self.__dict__)
 
 def countIf(list, condition):
     """ Count elements in list satisfying the condition """
