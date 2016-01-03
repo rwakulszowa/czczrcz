@@ -6,7 +6,7 @@ class Node:
         self.name = name
         self.condition = condition
         self.elements = elements
-        self.children = self.separate_node()
+        self.categories = self.separate_node()
         self.relatives = []  # tuples of node, percentage of self.elements fulfilling relative.condition
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Node:
         return str(self)
 
     def addChild(self, child):
-        self.children.append(child)
+        self.categories.append(child)
         return self
 
     def add_relative(self, relative):
@@ -25,15 +25,15 @@ class Node:
 
     def relation(self, relative):
         """
-        Compute a probability that element in each origin.children fulfills
-        condition given by relative.children
+        Compute a probability that element in each origin.categories fulfills
+        condition given by relative.categories
         """
         ans = [(
                     relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
                     percentage(origin_child.elements, relative_child.condition)
                )
-                for origin_child in self.children
-                for relative_child in relative.children]
+                for origin_child in self.categories
+                for relative_child in relative.categories]
 
         return ans
 
@@ -65,7 +65,7 @@ class NodeEncoder(json.JSONEncoder):
             return {
                 'name': obj.name,
                 'elements': len(obj.elements),
-                'children': obj.children
+                'categories': obj.categories
             }
 
         return json.JSONEncoder.default(self, obj)
