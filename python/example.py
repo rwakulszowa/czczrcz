@@ -114,3 +114,7 @@ percentageCirclesInTrapezoids = trapezoids.relation(circles)
 print ("\nRelations:")
 print ("Trapezoids in circles: {}".format(percentageTrapezoidsInCircles))
 print ("Circles in trapezoids: {}".format(percentageCirclesInTrapezoids))
+
+circles.add_relative(trapezoids)
+
+print ((circles, trapezoids))
