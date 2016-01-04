@@ -6,7 +6,7 @@ class Node:
         self.name = name
         self.condition = condition
         self.elements = elements
-        self.categories = self.separate_node()
+        self.categories = self.split_node()
         self.relatives = []  # tuples of node, percentage of self.elements fulfilling relative.condition
 
     def __str__(self):
@@ -24,16 +24,13 @@ class Node:
         Compute a probability that element in each origin.categories fulfills
         condition given by relative.categories
         """
-        ans = [(
-                    relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
-                    percentage(origin_child.elements, relative_child.condition)
-               )
-                for origin_child in self.categories
-                for relative_child in relative.categories]
+        ans = [NodeRelation(origin_category, relative_category)
+                for origin_category in self.categories
+                for relative_category in relative.categories]
 
         return ans
 
-    def separate_node(self):
+    def split_node(self):
         hits, misses = separate(self.elements, self.condition)
 
         positive = NodeCategory(self.name + "_pos", True, self.condition, hits)
@@ -47,6 +44,18 @@ class NodeCategory(object):
         self.value = value
         self.condition = lambda x: condition(x) == value
         self.elements = elements
+
+    def __str__(self):
+        return json.dumps(self, cls=NodeEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
+
+class NodeRelation(object):
+    def __init__(self, origin, relative):
+        self.origin = origin
+        self.relative = relative
+        self.p = percentage(origin.elements, relative.condition)
 
     def __str__(self):
         return json.dumps(self, cls=NodeEncoder, indent=4)
@@ -68,6 +77,13 @@ class NodeEncoder(json.JSONEncoder):
                 'name': obj.name,
                 'elements': len(obj.elements),
                 'categories': obj.categories
+            }
+
+        if isinstance(obj, NodeRelation):
+            return {
+                'origin': obj.origin.name,
+                'relative': obj.relative.name,
+                'p': obj.p
             }
 
         return json.JSONEncoder.default(self, obj)

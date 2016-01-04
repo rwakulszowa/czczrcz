@@ -42,7 +42,7 @@ class Shape:
         self.isRectangle = rectangle
         self.isSquare = square
 
-    @staticmethod  # TODO: try using classmethod instead
+    @staticmethod
     def factory(type):
         """ Factory creating specific shapes
 
