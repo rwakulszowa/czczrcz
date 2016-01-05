@@ -42,7 +42,7 @@ class Shape:
         self.isRectangle = rectangle
         self.isSquare = square
 
-    @staticmethod  # TODO: try using classmethod instead
+    @staticmethod
     def factory(type):
         """ Factory creating specific shapes
 
@@ -105,12 +105,9 @@ nodes = [
 circles = nodes[0]
 trapezoids = nodes[2]
 
-# Print some nodes
-print ((circles, trapezoids))
+print (circles)
 
-percentageTrapezoidsInCircles = circles.relation(trapezoids)
-percentageCirclesInTrapezoids = trapezoids.relation(circles)
+# Add all nodes to trapezoid's relatives
+[trapezoids.add_relative(node) for node in nodes if node is not trapezoids]
 
-print ("\nRelations:")
-print ("Trapezoids in circles: {}".format(percentageTrapezoidsInCircles))
-print ("Circles in trapezoids: {}".format(percentageCirclesInTrapezoids))
+print (trapezoids)

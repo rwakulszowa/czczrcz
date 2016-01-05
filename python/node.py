@@ -6,8 +6,8 @@ class Node:
         self.name = name
         self.condition = condition
         self.elements = elements
-        self.children = self.separate_node()
-        self.relatives = []  # tuples of node, percentage of self.elements fulfilling relative.condition
+        self.categories = self.split_node()
+        self.relatives = []
 
     def __str__(self):
         return json.dumps(self, cls=NodeEncoder, indent=4)
@@ -15,29 +15,26 @@ class Node:
     def __repr__(self):
         return str(self)
 
-    def addChild(self, child):
-        self.children.append(child)
-        return self
-
     def add_relative(self, relative):
+        [self_category.add_relation(relative_category)
+            for self_category in self.categories
+            for relative_category in relative.categories]
+
         self.relatives.append(relative)
         return self
 
-    def relation(self, relative):
+    def relation(self, relative):  # move to NodeCategory
         """
-        Compute a probability that element in each origin.children fulfills
-        condition given by relative.children
+        Compute a probability that element in each origin.categories fulfills
+        condition given by relative.categories
         """
-        ans = [(
-                    relative_child.name,  # TODO: .name only for convenience, should be an object (TODO: make a new class)
-                    percentage(origin_child.elements, relative_child.condition)
-               )
-                for origin_child in self.children
-                for relative_child in relative.children]
+        ans = [NodeRelation(origin_category, relative_category)
+                for origin_category in self.categories
+                for relative_category in relative.categories]
 
         return ans
 
-    def separate_node(self):
+    def split_node(self):
         hits, misses = separate(self.elements, self.condition)
 
         positive = NodeCategory(self.name + "_pos", True, self.condition, hits)
@@ -51,6 +48,34 @@ class NodeCategory(object):
         self.value = value
         self.condition = lambda x: condition(x) == value
         self.elements = elements
+        self.relations = []
+
+    def __str__(self):
+        return json.dumps(self, cls=NodeEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
+
+    def add_relation(self, relative_category):
+        self.relations.append(NodeRelation(self, relative_category))
+
+class NodeRelation(object):
+    """ Probability relating two NodeCategories
+
+    Connects two NodeCategories (sets of elements and condition)
+    by storing a probability that an element of origin.elements
+    satisfies relative.condition (not the other way around)
+    """
+    def __init__(self, origin, relative):
+        self.origin = origin
+        self.relative = relative
+        self.p = percentage(origin.elements, relative.condition)
+
+    def __str__(self):
+        return json.dumps(self, cls=NodeEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
 
 class NodeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -58,14 +83,22 @@ class NodeEncoder(json.JSONEncoder):
             return {
                 'name': obj.name,
                 'value': obj.value,
-                'elements': len(obj.elements)
+                'elements': len(obj.elements),
+                'relations': obj.relations
             }
 
         if isinstance(obj, Node):
             return {
                 'name': obj.name,
                 'elements': len(obj.elements),
-                'children': obj.children
+                'categories': obj.categories
+            }
+
+        if isinstance(obj, NodeRelation):
+            return {
+                'origin': obj.origin.name,
+                'relative': obj.relative.name,
+                'p': obj.p
             }
 
         return json.JSONEncoder.default(self, obj)
