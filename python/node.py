@@ -60,6 +60,12 @@ class NodeCategory(object):
         self.relations.append(NodeRelation(self, relative_category))
 
 class NodeRelation(object):
+    """ Probability relating two NodeCategories
+
+    Connects two NodeCategories (sets of elements and condition)
+    by storing a probability that an element of origin.elements
+    satisfies relative.condition (not the other way around)
+    """
     def __init__(self, origin, relative):
         self.origin = origin
         self.relative = relative

@@ -105,16 +105,7 @@ nodes = [
 circles = nodes[0]
 trapezoids = nodes[2]
 
-# Print some nodes
-print ((circles, trapezoids))
-
-percentageTrapezoidsInCircles = circles.relation(trapezoids)
-percentageCirclesInTrapezoids = trapezoids.relation(circles)
-
-print ("\nRelations:")
-print ("Trapezoids in circles: {}".format(percentageTrapezoidsInCircles))
-print ("Circles in trapezoids: {}".format(percentageCirclesInTrapezoids))
-
 circles.add_relative(trapezoids)
+trapezoids.add_relative(circles)
 
 print ((circles, trapezoids))
