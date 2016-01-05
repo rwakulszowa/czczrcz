@@ -105,7 +105,9 @@ nodes = [
 circles = nodes[0]
 trapezoids = nodes[2]
 
-circles.add_relative(trapezoids)
-trapezoids.add_relative(circles)
+print (circles)
 
-print ((circles, trapezoids))
+# Add all nodes to trapezoid's relatives
+[trapezoids.add_relative(node) for node in nodes if node is not trapezoids]
+
+print (trapezoids)
