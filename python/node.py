@@ -23,17 +23,6 @@ class Node:
         self.relatives.append(relative)
         return self
 
-    def relation(self, relative):  # move to NodeCategory
-        """
-        Compute a probability that element in each origin.categories fulfills
-        condition given by relative.categories
-        """
-        ans = [NodeRelation(origin_category, relative_category)
-                for origin_category in self.categories
-                for relative_category in relative.categories]
-
-        return ans
-
     def split_node(self):
         hits, misses = separate(self.elements, self.condition)
 
