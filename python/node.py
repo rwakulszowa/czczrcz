@@ -1,8 +1,7 @@
 from __future__ import division
 import json
 #TODO: rename / merge node into trait, handle multiple values (not just 2 bools)
-#TODO: implement auto creation of Traits based on conditions only
-#TODO: move elements to database?
+
 class Node:
     def __init__(self, name, condition, elements):
         self.name = name

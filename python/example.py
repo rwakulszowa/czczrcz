@@ -6,7 +6,11 @@ Simple working example of what is to be a useful structure for
 unsupervised machine learning project.
 
 Currently it only supports one category - shape - and its subcategories.
-
+#TODO: implement auto creation of Traits based on conditions only
+#TODO: move elements to database?
+#TODO: implement auto-clustering (division into categories) - kmeans?
+#TODO: implement auto-fitting the best condition (given by hand now, the
+#      goal is to make the program find the relation)
 """
 
 class Shape:
@@ -80,7 +84,32 @@ class Shape:
     def show(self):
         print ([key for key, val in vars(self).iteritems() if val is True])
 
+def node_example(things):
+    # Create independent node for each parameter
+    nodes = [
+        Node(name, condition, things)
+        for name, condition in [
+            ('circles', lambda x: getattr(x, 'isCircle')),
+            ('quads', lambda x: getattr(x, 'isQuad')),
+            ('trapezoids', lambda x: getattr(x, 'isTrapezoid')),
+            ('parallelograms', lambda x: getattr(x, 'isParalllelogram')),
+            ('rhombuses', lambda x: getattr(x, 'isRhombus')),
+            ('rectangles', lambda x: getattr(x, 'isRectangle')),
+            ('squares', lambda x: getattr(x, 'isSquare'))
+        ]
+    ]
 
+    circles = nodes[0]
+    trapezoids = nodes[2]
+
+    # Add all nodes to trapezoid's relatives
+    [trapezoids.add_relative(node) for node in nodes if node is not trapezoids]
+
+    return trapezoids
+
+def trait_example(things):
+    pass
+    
 # Prepare some shapes
 shapes = [
     Shape.factory(shape)
@@ -88,26 +117,5 @@ shapes = [
     for i in range(0, 25)
 ]
 
-# Create independent node for each parameter
-nodes = [
-    Node(name, condition, shapes)
-    for name, condition in [
-        ('circles', lambda x: getattr(x, 'isCircle')),
-        ('quads', lambda x: getattr(x, 'isQuad')),
-        ('trapezoids', lambda x: getattr(x, 'isTrapezoid')),
-        ('parallelograms', lambda x: getattr(x, 'isParalllelogram')),
-        ('rhombuses', lambda x: getattr(x, 'isRhombus')),
-        ('rectangles', lambda x: getattr(x, 'isRectangle')),
-        ('squares', lambda x: getattr(x, 'isSquare'))
-    ]
-]
-
-circles = nodes[0]
-trapezoids = nodes[2]
-
-print (circles)
-
-# Add all nodes to trapezoid's relatives
-[trapezoids.add_relative(node) for node in nodes if node is not trapezoids]
-
-print (trapezoids)
+nodes = node_example(shapes)
+print (nodes)
