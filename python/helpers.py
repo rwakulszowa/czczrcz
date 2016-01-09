@@ -26,12 +26,6 @@ def split_bool(elements, test, value_range):
     top = value_range[1]
     middle = (low + top) / 2
 
-    def low_condition(x):
-        return low <= x < middle
-
-    def top_condition(x):
-        return middle <= x <= top
-
     for e in elements:
         value = test(e)
 
@@ -40,7 +34,4 @@ def split_bool(elements, test, value_range):
         else:
             tops.append(e)
 
-    return (
-        (lows, low_condition),
-        (tops, top_condition)
-    )
+    return (lows, tops)
