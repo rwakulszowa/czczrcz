@@ -17,3 +17,21 @@ def separate(elements, condition):
             misses.append(el)
 
     return hits, misses
+
+def split_bool(elements, test, value_range):
+    # A kind of a stub to simulate the splitting functionality for bools
+    tops, lows = [], []
+
+    low = value_range[0]
+    top = value_range[1]
+    middle = (low + top) / 2
+
+    for e in elements:
+        value = test(e)
+
+        if low <= value < middle:
+            lows.append(e)
+        else:
+            tops.append(e)
+
+    return (lows, tops)
