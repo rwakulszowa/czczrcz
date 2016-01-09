@@ -1,6 +1,7 @@
 from __future__ import division
 import pdb
 from node import *
+import helpers
 """
 Simple working example of what is to be a useful structure for
 unsupervised machine learning project.
@@ -109,7 +110,7 @@ def node_example(things):
 
 def trait_example(things):
     pass
-    
+
 # Prepare some shapes
 shapes = [
     Shape.factory(shape)

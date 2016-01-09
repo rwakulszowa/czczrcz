@@ -1,5 +1,5 @@
 import json
-from __future__ import division
+from helpers import percentage
 
 class Trait(object):
     """
@@ -8,8 +8,11 @@ class Trait(object):
     and possible categories they can fit information
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, name, condition, elements):
+        self.name = name
+        self.condition = condition
+        self.elements = elements
+        self.categories = []
 
 class Category(object):
     """
@@ -17,8 +20,11 @@ class Category(object):
     specific parameters
     """
 
-    def __init__(self, trait):
-        pass
+    def __init__(self, name, condition, value_range, elements):
+        self.name = name
+        self.condition = condition
+        self.value_range = value_range
+        self.elements = elements
 
 class Relation(object):
     """ Probability relating two NodeCategories
@@ -28,8 +34,10 @@ class Relation(object):
     satisfies relative.condition (not the other way around)
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, origin, relative, p):
+        self.origin = origin
+        self.relative = relative
+        self.p = p
 
 class TraitEncoder(json.JSONEncoder):
     def default(self, obj):
