@@ -1,5 +1,6 @@
+from __future__ import division
 import json
-from helpers import percentage
+from helpers import percentage, split_bool
 
 class Trait(object):
     """
@@ -8,9 +9,9 @@ class Trait(object):
     and possible categories they can fit information
     """
 
-    def __init__(self, name, condition, elements):
+    def __init__(self, name, test, elements):
         self.name = name
-        self.condition = condition
+        self.test = test
         self.elements = elements
         self.categories = []
 
@@ -19,6 +20,22 @@ class Trait(object):
 
     def __repr__(self):
         return str(self)
+
+    def split(self):
+        #TODO: implement auto-clustering here, some day (here or in a factory)
+        bool_range = (0.0, 1.0)
+        middle = sum(bool_range) / 2
+
+        groups = split_bool(self.elements, self.test, middle, bool_range)
+
+        categories = [Category(
+            "{}{}".format(self.name, i),
+            group[2],
+            group[1],
+            group[0]
+        ) for i, group in enumerate(groups)]
+
+        return categories
 
 class Category(object):
     """

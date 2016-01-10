@@ -1,6 +1,7 @@
 from __future__ import division
 import pdb
 from node import *
+from trait import *
 import helpers
 """
 Simple working example of what is to be a useful structure for
@@ -109,7 +110,8 @@ def node_example(things):
     return trapezoids
 
 def trait_example(things):
-    pass
+    circles = Trait('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0, things)
+    return circles
 
 # Prepare some shapes
 shapes = [
