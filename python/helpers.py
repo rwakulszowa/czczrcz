@@ -18,18 +18,15 @@ def separate(elements, condition):
 
     return hits, misses
 
-def split_bool(elements, test, value_range):
+def split_bool(elements, test, cutoff):
     # A kind of a stub to simulate the splitting functionality for bools
+    # TODO: make the condition look always the same: Trait.condition(el) within(bounds)
     tops, lows = [], []
-
-    low = value_range[0]
-    top = value_range[1]
-    middle = (low + top) / 2
 
     for e in elements:
         value = test(e)
 
-        if low <= value < middle:
+        if value < cutoff:
             lows.append(e)
         else:
             tops.append(e)
