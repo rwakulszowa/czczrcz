@@ -5,8 +5,10 @@ from helpers import percentage, split_bool
 class Trait(object):
     """
     Class storing information about each trait, i.e.
-    the condition which objects will be tested against
+    the method which objects will be tested against
     and possible categories they can fit information
+
+    Trait.test() takes an object as input and returns a float
     """
 
     def __init__(self, name, test, elements):
@@ -14,6 +16,7 @@ class Trait(object):
         self.test = test
         self.elements = elements
         self.categories = []
+        self.relatives = []
 
     def __str__(self):
         return json.dumps(self, cls=TraitEncoder, indent=4)
@@ -29,6 +32,7 @@ class Trait(object):
         groups = split_bool(self.elements, self.test, middle, bool_range)
 
         categories = [Category(
+            self,
             "{}{}".format(self.name, i),
             group[2],
             group[1],
@@ -37,23 +41,47 @@ class Trait(object):
 
         return categories
 
+    def add_relative(self, relative):
+        [self_category.add_relation(relative_category)
+            for self_category in self.categories
+            for relative_category in relative.categories]
+
+        self.relatives.append(relative)
+
 class Category(object):
     """
     Each trait divides objects into categories with
     specific parameters
+
+    Category.match() takes a float as an input and returns boolean
     """
 
-    def __init__(self, name, condition, value_range, elements):
+    def __init__(self, trait, name, match, value_range, elements):
+        self.trait = trait
         self.name = name
-        self.condition = condition
+        self.match = match
         self.value_range = value_range
         self.elements = elements
+        self.relations = []
 
     def __str__(self):
         return json.dumps(self, cls=TraitEncoder, indent=4)
 
     def __repr__(self):
         return str(self)
+
+    def condition(self):
+        return lambda x: self.match(self.trait.test(x))
+
+    def compute_relation(self, relative_category):
+        origin = self
+        relative = relative_category
+        p = percentage(origin.elements, relative_category.condition())
+
+        return Relation(origin, relative, p)
+
+    def add_relation(self, relative_category):
+        self.relations.append(self.compute_relation(relative_category))
 
 class Relation(object):
     """ Probability relating two NodeCategories
@@ -79,14 +107,17 @@ class TraitEncoder(json.JSONEncoder):
         if isinstance(obj, Trait):
             return {
                 'name': obj.name,
-                'elements': len(obj.elements)
+                'elements': len(obj.elements),
+                'categories': obj.categories,
+                'relatives': obj.relatives,
             }
 
         if isinstance(obj, Category):
             return {
                 'name': obj.name,
                 'elements': len(obj.elements),
-                'value_range': obj.value_range
+                'value_range': obj.value_range,
+                'relations': obj.relations
             }
 
         if isinstance(obj, Relation):

@@ -111,6 +111,13 @@ def node_example(things):
 
 def trait_example(things):
     circles = Trait('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0, things)
+    trapezoids = Trait('trapezoids', lambda x: 1.0 if getattr(x, 'isTrapezoid') else 0.0, things)
+    traits = [circles, trapezoids]
+
+    for t in traits:
+        t.categories = t.split()
+
+    circles.add_relative(trapezoids)
     return circles
 
 # Prepare some shapes
@@ -120,5 +127,10 @@ shapes = [
     for i in range(0, 25)
 ]
 
+print ("Node example")
 nodes = node_example(shapes)
 print (nodes)
+
+print ("Trait example")
+trait_circles = trait_example(shapes)
+print (trait_circles)
