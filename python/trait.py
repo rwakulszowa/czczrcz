@@ -49,6 +49,12 @@ class Category(object):
         self.value_range = value_range
         self.elements = elements
 
+    def __str__(self):
+        return json.dumps(self, cls=TraitEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
+
 class Relation(object):
     """ Probability relating two NodeCategories
 
@@ -61,6 +67,12 @@ class Relation(object):
         self.origin = origin
         self.relative = relative
         self.p = p
+
+    def __str__(self):
+        return json.dumps(self, cls=TraitEncoder, indent=4)
+
+    def __repr__(self):
+        return str(self)
 
 class TraitEncoder(json.JSONEncoder):
     def default(self, obj):
