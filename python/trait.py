@@ -102,6 +102,15 @@ class Relation(object):
     def __repr__(self):
         return str(self)
 
+class TraitFactory(object):
+    def __init__(self, elements):
+        self.elements = elements
+
+    def makeTrait(self, name, test):
+        t = Trait(name, test, self.elements)
+        t.categories = t.split()
+        return t
+
 class TraitEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Trait):

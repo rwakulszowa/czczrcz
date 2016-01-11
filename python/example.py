@@ -85,8 +85,9 @@ class Shape:
         print ([key for key, val in vars(self).iteritems() if val is True])
 
 def trait_example(things):
+    traitFactory = TraitFactory(things)
     traits = [
-        Trait(name, condition, things)
+        traitFactory.makeTrait(name, condition)
         for name, condition in [
             ('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0),
             ('quads', lambda x: 1.0 if getattr(x, 'isQuad') else 0.0),
@@ -97,9 +98,6 @@ def trait_example(things):
             ('squares', lambda x: 1.0 if getattr(x, 'isSquare') else 0.0)
         ]
     ]
-
-    for t in traits:
-        t.categories = t.split()
 
     trapezoids = traits[2]
 
