@@ -42,7 +42,7 @@ class Trait(object):
         return categories
 
     def add_relative(self, relative):
-        [self_category.add_relation(relative_category)
+        [self_category.add_relation(self_category.compute_relation(relative_category))
             for self_category in self.categories
             for relative_category in relative.categories]
 
@@ -80,8 +80,8 @@ class Category(object):
 
         return Relation(origin, relative, p)
 
-    def add_relation(self, relative_category):
-        self.relations.append(self.compute_relation(relative_category))
+    def add_relation(self, relation):
+        self.relations.append(relation)
 
 class Relation(object):
     """ Probability relating two NodeCategories
@@ -109,7 +109,7 @@ class TraitEncoder(json.JSONEncoder):
                 'name': obj.name,
                 'elements': len(obj.elements),
                 'categories': obj.categories,
-                'relatives': obj.relatives,
+                'relatives': [r.name for r in obj.relatives],
             }
 
         if isinstance(obj, Category):
