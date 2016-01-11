@@ -117,8 +117,8 @@ def trait_example(things):
     for t in traits:
         t.categories = t.split()
 
-    circles.add_relative(trapezoids)
-    return circles
+    trapezoids.add_relative(circles)
+    return trapezoids
 
 # Prepare some shapes
 shapes = [
@@ -128,9 +128,9 @@ shapes = [
 ]
 
 print ("Node example")
-nodes = node_example(shapes)
-print (nodes)
+node_trapezoids = node_example(shapes)
+print (node_trapezoids)
 
 print ("Trait example")
-trait_circles = trait_example(shapes)
-print (trait_circles)
+trait_trapezoids = trait_example(shapes)
+print (trait_trapezoids)
