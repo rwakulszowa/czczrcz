@@ -1,8 +1,6 @@
 from __future__ import division
-import pdb
-from node import *
 from trait import *
-import helpers
+
 """
 Simple working example of what is to be a useful structure for
 unsupervised machine learning project.
