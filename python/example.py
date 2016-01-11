@@ -86,38 +86,28 @@ class Shape:
     def show(self):
         print ([key for key, val in vars(self).iteritems() if val is True])
 
-def node_example(things):
-    # Create independent node for each parameter
-    nodes = [
-        Node(name, condition, things)
+def trait_example(things):
+    traits = [
+        Trait(name, condition, things)
         for name, condition in [
-            ('circles', lambda x: getattr(x, 'isCircle')),
-            ('quads', lambda x: getattr(x, 'isQuad')),
-            ('trapezoids', lambda x: getattr(x, 'isTrapezoid')),
-            ('parallelograms', lambda x: getattr(x, 'isParalllelogram')),
-            ('rhombuses', lambda x: getattr(x, 'isRhombus')),
-            ('rectangles', lambda x: getattr(x, 'isRectangle')),
-            ('squares', lambda x: getattr(x, 'isSquare'))
+            ('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0),
+            ('quads', lambda x: 1.0 if getattr(x, 'isQuad') else 0.0),
+            ('trapezoids', lambda x: 1.0 if getattr(x, 'isTrapezoid') else 0.0),
+            ('parallelograms', lambda x: 1.0 if getattr(x, 'isParalllelogram') else 0.0),
+            ('rhombuses', lambda x: 1.0 if getattr(x, 'isRhombus') else 0.0),
+            ('rectangles', lambda x: 1.0 if getattr(x, 'isRectangle') else 0.0),
+            ('squares', lambda x: 1.0 if getattr(x, 'isSquare') else 0.0)
         ]
     ]
-
-    circles = nodes[0]
-    trapezoids = nodes[2]
-
-    # Add all nodes to trapezoid's relatives
-    [trapezoids.add_relative(node) for node in nodes if node is not trapezoids]
-
-    return trapezoids
-
-def trait_example(things):
-    circles = Trait('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0, things)
-    trapezoids = Trait('trapezoids', lambda x: 1.0 if getattr(x, 'isTrapezoid') else 0.0, things)
-    traits = [circles, trapezoids]
 
     for t in traits:
         t.categories = t.split()
 
-    trapezoids.add_relative(circles)
+    trapezoids = traits[2]
+
+    # Add all nodes to trapezoid's relatives
+    [trapezoids.add_relative(trait) for trait in traits if trait is not trapezoids]
+
     return trapezoids
 
 # Prepare some shapes
@@ -127,10 +117,5 @@ shapes = [
     for i in range(0, 25)
 ]
 
-print ("Node example")
-node_trapezoids = node_example(shapes)
-print (node_trapezoids)
-
-print ("Trait example")
 trait_trapezoids = trait_example(shapes)
 print (trait_trapezoids)
