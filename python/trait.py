@@ -33,11 +33,11 @@ class Trait(object):
 
         categories = [Category(
             self,
-            "{}{}".format(self.name, i),
+            "{}_{}_{}".format(self.name, *group[1]),
             group[2],
             group[1],
             group[0]
-        ) for i, group in enumerate(groups)]
+        ) for group in groups]
 
         return categories
 
