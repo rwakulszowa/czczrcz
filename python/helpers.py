@@ -1,4 +1,5 @@
 from __future__ import division
+from sklearn.cluster import KMeans
 
 def countIf(list, condition):
     """ Count elements in list satisfying the condition """
@@ -18,33 +19,22 @@ def separate(elements, condition):
 
     return hits, misses
 
-def split_bool(elements, test, cutoff, value_range):
-    # A kind of a stub to simulate the splitting functionality for bools
-    # TODO: make the condition look always the same: Trait.condition(el) within(bounds)
-    lows, tops = [], []
-    left_end = value_range[0]
-    right_end = value_range[1]
+def split_bool(elements, test, classifier):
+    values = [test(e) for e in elements]
 
-    low_range = (left_end, cutoff)
-    high_range = (cutoff, right_end)
+    classifier.fit([[v] for v in values])
+    means = classifier.cluster_centers_
 
-    low_condition = lambda x: within(x, low_range)
-    high_condition = lambda x: within(x, high_range, inclusive=True)
+    groups = {
+        0: [],
+        1: []
+    }
 
-    for e in elements:
-        value = test(e)
+    for el, val in zip(elements, values):
+        label = classifier.predict(val)[0]
+        groups[label].append(el)
 
-        if low_condition(value):
-            lows.append(e)
-        elif high_condition(value):
-            tops.append(e)
-        else:
-            print ("Warning: element {} matched no conditions".format(e))
-
-    return (
-        (lows, low_range, low_condition),
-        (tops, high_range, high_condition)
-    )
+    return [(means[label][0], groups[label], label) for label in groups]
 
 def within(el, bounds, inclusive=False):
     left = bounds[0]

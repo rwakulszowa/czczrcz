@@ -6,7 +6,6 @@ Simple working example of what is to be a useful structure for
 unsupervised machine learning project.
 
 Currently it only supports one category - shape - and its subcategories.
-#TODO: implement auto creation of Traits based on conditions only
 #TODO: move elements to database?
 #TODO: implement auto-clustering (division into categories) - kmeans?
 #TODO: implement auto-fitting the best condition (given by hand now, the
@@ -87,7 +86,7 @@ class Shape:
 def trait_example(things):
     traitFactory = TraitFactory(things)
     traits = [
-        traitFactory.makeTrait(name, condition)
+        traitFactory.makeTrait(name, condition, 2)
         for name, condition in [
             ('circles', lambda x: 1.0 if getattr(x, 'isCircle') else 0.0),
             ('quads', lambda x: 1.0 if getattr(x, 'isQuad') else 0.0),

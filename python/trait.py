@@ -1,5 +1,6 @@
 from __future__ import division
 import json
+from sklearn.cluster import KMeans
 from helpers import percentage, split_bool
 
 class Trait(object):
@@ -11,9 +12,10 @@ class Trait(object):
     Trait.test() takes an object as input and returns a float
     """
 
-    def __init__(self, name, test, elements):
+    def __init__(self, name, test, elements, n_categories):
         self.name = name
         self.test = test
+        self.classifier = KMeans(n_clusters=n_categories)
         self.elements = elements
         self.categories = []
         self.relatives = []
@@ -25,18 +27,14 @@ class Trait(object):
         return str(self)
 
     def split(self):
-        #TODO: implement auto-clustering here, some day (here or in a factory)
-        bool_range = (0.0, 1.0)
-        middle = sum(bool_range) / 2
-
-        groups = split_bool(self.elements, self.test, middle, bool_range)
+        groups = split_bool(self.elements, self.test, self.classifier)
 
         categories = [Category(
             self,
-            "{}_{}_{}".format(self.name, *group[1]),
-            group[2],
+            "{}_{}".format(self.name, group[0]),
+            group[0],
             group[1],
-            group[0]
+            group[2]
         ) for group in groups]
 
         return categories
@@ -56,11 +54,11 @@ class Category(object):
     Category.match() takes a float as an input and returns boolean
     """
 
-    def __init__(self, trait, name, match, value_range, elements):
+    def __init__(self, trait, name, mean_val, elements, label):
         self.trait = trait
         self.name = name
-        self.match = match
-        self.value_range = value_range
+        self.mean_val = mean_val
+        self.classifier_label = label
         self.elements = elements
         self.relations = []
 
@@ -69,6 +67,9 @@ class Category(object):
 
     def __repr__(self):
         return str(self)
+
+    def match(self, x):
+        return self.trait.classifier.predict(x)[0] == self.classifier_label
 
     def condition(self):
         return lambda x: self.match(self.trait.test(x))
@@ -106,8 +107,8 @@ class TraitFactory(object):
     def __init__(self, elements):
         self.elements = elements
 
-    def makeTrait(self, name, test):
-        t = Trait(name, test, self.elements)
+    def makeTrait(self, name, test, n_categories):
+        t = Trait(name, test, self.elements, n_categories)
         t.categories = t.split()
         return t
 
@@ -125,7 +126,7 @@ class TraitEncoder(json.JSONEncoder):
             return {
                 'name': obj.name,
                 'elements': len(obj.elements),
-                'value_range': obj.value_range,
+                'mean_val': obj.mean_val,
                 'relations': obj.relations
             }
 
