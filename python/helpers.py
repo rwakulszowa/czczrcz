@@ -19,23 +19,6 @@ def separate(elements, condition):
 
     return hits, misses
 
-def split_bool(elements, test, classifier):
-    values = [test(e) for e in elements]
-
-    classifier.fit([[v] for v in values])
-    means = classifier.cluster_centers_
-
-    groups = {
-        0: [],
-        1: []
-    }
-
-    for el, val in zip(elements, values):
-        label = classifier.predict(val)[0]
-        groups[label].append(el)
-
-    return [(means[label][0], groups[label], label) for label in groups]
-
 def within(el, bounds, inclusive=False):
     left = bounds[0]
     right = bounds[1]

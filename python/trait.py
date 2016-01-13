@@ -1,7 +1,8 @@
 from __future__ import division
 import json
-from sklearn.cluster import KMeans
-from helpers import percentage, split_bool
+from numpy import linspace
+from clusters import KMeans
+from helpers import percentage
 
 class Trait(object):
     """
@@ -15,7 +16,7 @@ class Trait(object):
     def __init__(self, name, test, elements, n_categories):
         self.name = name
         self.test = test
-        self.classifier = KMeans(n_clusters=n_categories)
+        self.classifier = KMeans(self.test, 2, linspace(0,1,2).reshape(2,1))
         self.elements = elements
         self.categories = []
         self.relatives = []
@@ -27,15 +28,15 @@ class Trait(object):
         return str(self)
 
     def split(self):
-        groups = split_bool(self.elements, self.test, self.classifier)
+        groups = self.classifier.split(self.elements)
 
         categories = [Category(
             self,
-            "{}_{}".format(self.name, group[0]),
-            group[0],
-            group[1],
-            group[2]
-        ) for group in groups]
+            "{}_{}".format(self.name, groups[label][0]),
+            groups[label][0],  # mean
+            groups[label][1],  # elements
+            label  # label
+        ) for label in groups]
 
         return categories
 
