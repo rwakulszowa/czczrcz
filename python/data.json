@@ -1,0 +1,148 @@
+{
+    "relatives": [
+        "circles", 
+        "quads", 
+        "parallelograms", 
+        "rhombuses", 
+        "rectangles", 
+        "squares"
+    ], 
+    "elements": 100, 
+    "name": "trapezoids", 
+    "categories": [
+        {
+            "mean_val": 0.0, 
+            "elements": 50, 
+            "name": "trapezoids_0.0", 
+            "relations": [
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "circles_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "circles_1.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "quads_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "quads_1.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "parallelograms_0.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "parallelograms_1.0", 
+                    "p": 0.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "rhombuses_0.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "rhombuses_1.0", 
+                    "p": 0.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "rectangles_0.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "rectangles_1.0", 
+                    "p": 0.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "squares_0.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_0.0", 
+                    "relative": "squares_1.0", 
+                    "p": 0.0
+                }
+            ]
+        }, 
+        {
+            "mean_val": 1.0, 
+            "elements": 50, 
+            "name": "trapezoids_1.0", 
+            "relations": [
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "circles_0.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "circles_1.0", 
+                    "p": 0.0
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "quads_0.0", 
+                    "p": 0.0
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "quads_1.0", 
+                    "p": 1.0
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "parallelograms_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "parallelograms_1.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "rhombuses_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "rhombuses_1.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "rectangles_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "rectangles_1.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "squares_0.0", 
+                    "p": 0.5
+                }, 
+                {
+                    "origin": "trapezoids_1.0", 
+                    "relative": "squares_1.0", 
+                    "p": 0.5
+                }
+            ]
+        }
+    ]
+}
